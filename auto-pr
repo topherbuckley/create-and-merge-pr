@@ -78,10 +78,10 @@ echo "PR_BODY: $PR_BODY"
 git push --set-upstream $ORIGIN $BRANCH_NAME
 
 # Create a pull request against the upstream repository
-if [ -n "$PR_TITLE" ] || [ -n "$PR_BODY" ]; then
-  PR_URL=$(gh pr create --title "$PR_TITLE" --body "$PR_BODY" --head $BRANCH_NAME | grep -oP '(?<=pulls\/)\d+')
-else
+if [ "$PR_TITLE" == "$DEFAULT_PR_TITLE" ] && [ "$PR_BODY" == "$DEFAULT_PR_BODY" ]; then
   PR_URL=$(gh pr create --head $BRANCH_NAME --fill-verbose | grep -oP '(?<=pulls\/)\d+')
+else
+  PR_URL=$(gh pr create --title "$PR_TITLE" --body "$PR_BODY" --head $BRANCH_NAME | grep -oP '(?<=pulls\/)\d+')
 fi
 
 # Merge the pull request (against the upstream repository)
