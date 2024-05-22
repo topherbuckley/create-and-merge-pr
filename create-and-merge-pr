@@ -14,7 +14,8 @@ usage() {
   echo "  --pr-body PR_BODY      : The body of the pull request (optional, defaults to 'Default PR Body; not directly specified')"
   echo "  --origin ORIGIN         : The name of the remote for pushing changes (optional, defaults to 'origin')"
   echo "  --upstream UPSTREAM     : The name of the remote for creating pull requests (optional, defaults to 'upstream')"
-  exit 1
+  echo "  --help                  : Display this help message"
+  exit 0
 }
 
 # Parse command-line arguments
@@ -39,6 +40,9 @@ while [[ $# -gt 0 ]]; do
     --pr-title)
       PR_TITLE="$2"
       shift 2
+      ;;
+    --help)
+      usage
       ;;
     *)
       echo "Unknown option: $1"
