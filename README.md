@@ -11,6 +11,11 @@ See `create-and-merge-pr --help` for further options.
 By default this assumes your fork is named `origin` and the upstream is named `upstream`. but you can specify the names of the remotes using the `--origin` and `--upstream` flags.
 You can call this script even before pushing to your fork, or after, but it will not fix things for you if you accientally push to upstream directly. In that case it will just push an identical commit to your fork and create a PR from there.
 
+# Installation
+1. Clone this repo
+2. Install github cli (https://cli.github.com/)
+3. Add the path to the script to your PATH
+
 # Usage
 1. Clone the repo you want to work on (I assume this is refered to as upstream in your remotes)
 2. Fork the repo on github (I assume this is refered to as origin in your remotes)
