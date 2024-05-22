@@ -97,6 +97,17 @@ git pull $UPSTREAM main
 git checkout $BRANCH_NAME
 
 # Confirm and delete the remote branch (from your fork)
+confirm_deletion() {
+  while true; do
+    read -p "Do you wish to delete the $1 branch '$2'? [y/n] " yn
+    case $yn in
+      [Yy]* ) return 0;;
+      [Nn]* ) return 1;;
+      * ) echo "Please answer yes or no.";;
+    esac
+  done
+}
+
 if confirm_deletion "remote" "$BRANCH_NAME"; then
   git push $ORIGIN --delete $BRANCH_NAME
   echo "Remote branch '$BRANCH_NAME' deleted."
