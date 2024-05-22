@@ -4,11 +4,12 @@
 ORIGIN="origin"
 UPSTREAM="upstream"
 DEFAULT_PR_BODY="Default PR Body; not directly specified"
+DEFAULT_PR_TITLE="$(git log -1 --pretty=%B)"
 
 # Function to display usage instructions
 usage() {
   echo "Usage: $0 [--pr-title PR_TITLE] [--branch-name BRANCH_NAME] [--pr-body PR_BODY] [--origin ORIGIN_REMOTE] [--upstream UPSTREAM_REMOTE]"
-  echo "  --pr-title PR_TITLE   : The title for the pull request (defaults to the latest commit message)"
+  echo "  --pr-title PR_TITLE   : The title for the pull request (optional, defaults to the latest commit message)"
   echo "  --branch-name BRANCH_NAME : The name of the branch (optional, defaults to current branch)"
   echo "  --pr-body PR_BODY      : The body of the pull request (optional, defaults to 'Default PR Body; not directly specified')"
   echo "  --origin ORIGIN         : The name of the remote for pushing changes (optional, defaults to 'origin')"
@@ -57,7 +58,7 @@ if [ "$BRANCH_NAME" == "main" ] || [ "$BRANCH_NAME" == "master" ]; then
 fi
 
 # Use the most recent commit message at HEAD as the default PR_TITLE
-PR_TITLE=${PR_TITLE:-"$(git log -1 --pretty=%B)"}
+PR_TITLE=${PR_TITLE:-$DEFAULT_PR_TITLE}
 
 # Use the default PR_BODY if not provided
 PR_BODY=${PR_BODY:-$DEFAULT_PR_BODY}
