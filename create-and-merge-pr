@@ -90,11 +90,10 @@ else
   exit 1
 fi
 
-# Pull changes into the current branch (from upstream)
-git pull $UPSTREAM main
-
-# Switch back to the original branch
-git checkout $BRANCH_NAME
+# Pull changes into the main branch (from upstream)
+MAIN_BRANCH=$(git remote show $UPSTREAM | awk '/HEAD branch/ {print $NF}')
+git checkout $MAIN_BRANCH
+git pull $UPSTREAM $MAIN_BRANCH
 
 # Confirm and delete the remote branch (from your fork)
 confirm_deletion() {
