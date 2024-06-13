@@ -67,12 +67,25 @@ PR_TITLE=${PR_TITLE:-$DEFAULT_PR_TITLE}
 # Use the default PR_BODY if not provided
 PR_BODY=${PR_BODY:-$DEFAULT_PR_BODY}
 
+# Get the URL of the origin remote and extract the fork owner
+ORIGIN_URL=$(git remote get-url $ORIGIN)
+
+if [[ $ORIGIN_URL == git@github.com:* ]]; then
+  FORKOWNER=$(echo $ORIGIN_URL | sed -n 's#git@github.com:\([^/]*\)/.*#\1#p')
+elif [[ $ORIGIN_URL == https://github.com/* ]]; then
+  FORKOWNER=$(echo $ORIGIN_URL | sed -n 's#https://github.com/\([^/]*\)/.*#\1#p')
+else
+  echo "Unsupported remote URL format: $ORIGIN_URL"
+  exit 1
+fi
+
 # Print debugging information
 echo "ORIGIN: $ORIGIN"
 echo "UPSTREAM: $UPSTREAM"
 echo "BRANCH_NAME: $BRANCH_NAME"
 echo "PR_TITLE: $PR_TITLE"
 echo "PR_BODY: $PR_BODY"
+echo "FORKOWNER: $FORKOWNER"
 
 # Push your changes to your fork (origin)
 git push --set-upstream $ORIGIN $BRANCH_NAME
@@ -80,12 +93,12 @@ git push --set-upstream $ORIGIN $BRANCH_NAME
 # Create a pull request against the upstream repository
 if [ "$PR_TITLE" == "$DEFAULT_PR_TITLE" ] && [ "$PR_BODY" == "$DEFAULT_PR_BODY" ]; then
     # print the command to the stdout prior to running it
-    echo "gh pr create --head $BRANCH_NAME --fill-verbose"
-    PR_URL=$(gh pr create --head $BRANCH_NAME --fill-verbose | grep -oP '(?<=pulls\/)\d+')
+    echo "gh pr create --head $FORKOWNER:$BRANCH_NAME --fill-verbose"
+    PR_URL=$(gh pr create --head $FORKOWNER:$BRANCH_NAME --fill-verbose | grep -oP '(?<=pulls\/)\d+')
 else
     # print the command to the stdout prior to running it
-    echo "gh pr create --title \"$PR_TITLE\" --body \"$PR_BODY\" --head $BRANCH_NAME"
-    PR_URL=$(gh pr create --title "$PR_TITLE" --body "$PR_BODY" --head $BRANCH_NAME | grep -oP '(?<=pulls\/)\d+')
+    echo "gh pr create --title \"$PR_TITLE\" --body \"$PR_BODY\" --head $FORKOWNER:$BRANCH_NAME"
+    PR_URL=$(gh pr create --title "$PR_TITLE" --body "$PR_BODY" --head $FORKOWNER:$BRANCH_NAME | grep -oP '(?<=pulls\/)\d+')
 fi
 
 # Merge the pull request (against the upstream repository)
