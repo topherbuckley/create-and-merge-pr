@@ -102,7 +102,7 @@ else
 fi
 
 # Merge the pull request (against the upstream repository)
-if gh pr merge $PR_URL --merge; then
+if gh pr merge $PR_URL --merge --wait; then
   echo "Pull request successfully merged."
 else
   PR_LINK=$(gh pr view $PR_URL --json url -q '.url' | tr -d '"')
